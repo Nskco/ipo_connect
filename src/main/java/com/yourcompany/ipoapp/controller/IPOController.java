@@ -20,19 +20,13 @@ public class IPOController {
         return ipoService.getAllIPOs();
     }
 
-    @PostMapping
-    public IPO createIPO(@RequestBody IPO ipo) throws IllegalArgumentException {
-        return ipoService.save(ipo);
-    }
+  
 
     @GetMapping("/{id}")
     public IPO getIPOById(@PathVariable String id) {
         return ipoService.findById(id);
     }
-    @DeleteMapping("/deleteAll")
-    public void deleteAllIPOs() {
-        ipoService.deleteAllIPOs();
-    }
+  
 
     @GetMapping("/company/{cn}")
     public IPO getIPOByCompanyName(@PathVariable String cn) {
