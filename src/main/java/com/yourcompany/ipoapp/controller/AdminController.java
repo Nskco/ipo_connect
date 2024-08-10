@@ -37,7 +37,7 @@ public class AdminController {
         ipoService.deleteAllIPOs();
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public IPO createIPO(@RequestBody IPO ipo) throws IllegalArgumentException {
         return ipoService.save(ipo);
     }

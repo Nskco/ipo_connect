@@ -33,6 +33,9 @@ public class IPOService {
         Optional<IPO> optionalIPO = ipoRepository.findByCompanyName(companyName);
         return optionalIPO.orElse(null); // Return IPO if present, otherwise null
     }
+    public boolean ipoExists(String name){
+        return ipoRepository.existsByCompanyName(name);
+    }
 
     public void deleteAllIPOs() {
         ipoRepository.deleteAll();
