@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").hasRole("ADMIN") // Secure admin endpoints
                 .anyRequest().permitAll() // Allow other requests
             )
-            .httpBasic(); // Use basic authentication
+            .httpBasic(); 
         return http.build();
     }
 }

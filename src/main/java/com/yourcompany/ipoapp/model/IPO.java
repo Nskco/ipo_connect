@@ -13,11 +13,8 @@ public class IPO {
     private int shares;
     private String sector;
 
-    public IPO(String companyName, int shares, String sector) {
-        this.companyName = companyName.toUpperCase(); // Store in uppercase
-        this.shares = shares;
-        this.sector=sector;
-    }
+
+
 
     public String getId() {
         return id;
@@ -53,5 +50,4 @@ public class IPO {
 
 
 
-    // Getters and Setters
 }

@@ -15,6 +15,25 @@ public class User {
     private String password;
     private String email;
     private HashMap<String,String> interestedIpoIds=new HashMap<>(); // List of interested IPOs
+    private static HashMap<String,String> liveDeals=new HashMap<>();
+
+    public User(){
+
+    }
+    // public User(String username, String password,String email){
+    //     this.email=email;
+    //     this.password=password;
+    //     this.username=username;
+    // }
+
+ 
+    public HashMap<String,String> getLiveDeals() {
+        return liveDeals;
+    }
+
+    public void setLiveDeals(String userName,String Status) {
+        liveDeals.put(userName, Status);
+    }
 
     // Getters and Setters
     public String getId() {

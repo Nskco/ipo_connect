@@ -4,6 +4,7 @@ import com.yourcompany.ipoapp.model.User;
 import com.yourcompany.ipoapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -12,10 +13,10 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-
+    
     @Autowired
     private UserRepository userRepository;
-
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -29,6 +30,7 @@ public class UserService {
     }
 
     public User saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -36,10 +38,13 @@ public class UserService {
         userRepository.deleteByUsername(username);
     }
 
-    public User addUserInterest(String username, String ipoId) {
+    public User addUserInterest(String username, String company) {
         User user = userRepository.findByUsername(username).orElse(null);
+
+        System.out.println(username);
         if (user != null) {
-            user.getInterestedIpoIds().put(ipoId,"0");
+            user.getInterestedIpoIds().put(company,"0");
+            user.getLiveDeals().put(username, company+ " STATUS: Not Paired");
             return userRepository.save(user);
         }
         return null;
@@ -64,4 +69,6 @@ public class UserService {
         }
         return list;
     } 
+
+ 
 }

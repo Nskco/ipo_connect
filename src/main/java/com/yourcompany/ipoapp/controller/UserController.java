@@ -46,12 +46,15 @@ public class UserController {
     public ResponseEntity<String> addInterest(@RequestParam String username, @PathVariable String companyName) {
         // Assuming IPO ID is the same as companyName for simplicity
         if(!ipoService.ipoExists(companyName)){
-            System.out.println("There's no IPO live with name "+companyName);
+            return ResponseEntity.ok("There's no IPO live with name "+companyName);
         } 
         if(userService.getByUsername(username)==null){
-            System.out.println("User not registered");
+            return ResponseEntity.ok("User not registered");
         }
-        userService.addUserInterest(username, companyName);
+        if(userService.addUserInterest(username, companyName)==null){
+            return ResponseEntity.ok("Failed");
+        }
+       
         
         return ResponseEntity.ok("Interest added successfully.");
         
@@ -85,9 +88,11 @@ public class UserController {
         }
         if(user.getInterestedIpoIds().get(company).equals("0")){
             mainUser.getInterestedIpoIds().put(company, "Paired to "+patner+" at your 1st prefernce");
+            mainUser.setLiveDeals(username, company+" Already paired");
             userService.saveUser(mainUser);
 
             user.getInterestedIpoIds().put(company, "Paired to "+ username+" at your 2nd prefernce");
+            user.setLiveDeals(patner, company+" Already paired");
             userService.saveUser(user);
         }
         else{
@@ -96,4 +101,10 @@ public class UserController {
         
         return "Paired Successfully";
     }
+
+@GetMapping("/deals")
+public HashMap<String,String> getStatusOfDeal(){
+    User user=new User();
+    return user.getLiveDeals();
+}
 }

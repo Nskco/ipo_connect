@@ -35,5 +35,4 @@ public class IPOController {
         return ipoService.getByCompanyName(Cname);
     }
 
-
 }
