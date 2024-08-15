@@ -3,8 +3,6 @@ package com.yourcompany.ipoapp.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 @Document(collection = "user")
@@ -20,11 +18,7 @@ public class User {
     public User(){
 
     }
-    // public User(String username, String password,String email){
-    //     this.email=email;
-    //     this.password=password;
-    //     this.username=username;
-    // }
+
 
  
     public HashMap<String,String> getLiveDeals() {
