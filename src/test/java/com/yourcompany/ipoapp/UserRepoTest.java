@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 
-import com.yourcompany.ipoapp.model.User;
+import com.yourcompany.ipoapp.model.User_data;
 import com.yourcompany.ipoapp.repository.UserRepository;
 import com.yourcompany.ipoapp.service.UserService;
 
@@ -22,12 +22,12 @@ public class UserRepoTest {
     @Autowired
     private UserService userService;
 
-    private User user;
+    private User_data user;
 
     @BeforeEach
     public 
     void setUp() {
-        user = new User();
+        user = new User_data();
         user.setEmail("Test");
         user.setUsername("Testt");
         user.setPassword("Test");
@@ -37,7 +37,7 @@ public class UserRepoTest {
 
     @Test
     void shouldFindUserByUsername() {
-        User foundUser = userRepository.findByUsername("Testt").orElse(null);
+        User_data foundUser = userRepository.findByUsername("Testt").orElse(null);
         assertEquals(user.getEmail(), foundUser.getEmail());
     }
     

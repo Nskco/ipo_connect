@@ -1,6 +1,6 @@
 package com.yourcompany.ipoapp.controller;
 
-import com.yourcompany.ipoapp.model.User;
+import com.yourcompany.ipoapp.model.User_data;
 import com.yourcompany.ipoapp.service.IPOService;
 import com.yourcompany.ipoapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,22 +18,22 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<User_data> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable String id) {
+    public User_data getUserById(@PathVariable String id) {
         return userService.findById(id);
     }
 
     @GetMapping("/username/{username}")
-    public User getUserByUsername(@PathVariable String username) {
+    public User_data getUserByUsername(@PathVariable String username) {
         return userService.getByUsername(username).orElse(null);
     }
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
+    public User_data registerUser(@RequestBody User_data user) {
         return userService.saveUser(user);
     }
 
@@ -73,8 +73,8 @@ public class UserController {
 
     @PostMapping("/pair/{username}/{company}")
     public String pairr(@RequestParam String patner,@PathVariable String username,@PathVariable String company){
-        User user=userService.getByUsername(patner).orElse(null);
-        User mainUser=userService.getByUsername(username).orElse(null);
+        User_data user=userService.getByUsername(patner).orElse(null);
+        User_data mainUser=userService.getByUsername(username).orElse(null);
 
         if(user==null){
             return "Sorry failed to get info about user";
@@ -104,7 +104,7 @@ public class UserController {
 
 @GetMapping("/deals")
 public HashMap<String,String> getStatusOfDeal(){
-    User user=new User();
+    User_data user=new User_data();
     return user.getLiveDeals();
 }
 }

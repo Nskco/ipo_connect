@@ -10,7 +10,7 @@ import static org.mockito.Mockito.*;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.yourcompany.ipoapp.model.User;
+import com.yourcompany.ipoapp.model.User_data;
 import com.yourcompany.ipoapp.repository.UserRepository;
 import com.yourcompany.ipoapp.service.UserService;
 
@@ -23,17 +23,17 @@ public class UserRepoTestByMockito {
     @Autowired
     private UserService userService;
 
-    private User user;
+    private User_data user;
 
     @BeforeEach
     public void setUp() {
-        user = new User();
+        user = new User_data();
         user.setEmail("Test");
         user.setUsername("Test");
         user.setPassword("Test");
 
         // Mock the save operation
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userRepository.save(any(User_data.class))).thenReturn(user);
 
         // Mock the find operation
         when(userRepository.findByUsername("Test")).thenReturn(java.util.Optional.of(user));
@@ -43,7 +43,7 @@ public class UserRepoTestByMockito {
 
     @Test
     void shouldFindUserByUsername() {
-        User foundUser = userService.getByUsername("Test").orElse(null);
+        User_data foundUser = userService.getByUsername("Test").orElse(null);
         assertEquals(user.getEmail(), foundUser.getEmail());
     }
 

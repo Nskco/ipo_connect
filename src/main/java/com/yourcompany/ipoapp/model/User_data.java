@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.HashMap;
 
 @Document(collection = "user")
-public class User {
+public class User_data {
     @Id
     private String id;
     private String username;
@@ -15,7 +15,7 @@ public class User {
     private HashMap<String,String> interestedIpoIds=new HashMap<>(); // List of interested IPOs
     private static HashMap<String,String> liveDeals=new HashMap<>();
 
-    public User(){
+    public User_data(){
 
     }
 
