@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,74 +38,78 @@ public class UserController {
         return userService.saveUser(user);
     }
 
-
-
-
     @Autowired
     private IPOService ipoService;
+
     @PostMapping("/interested/{companyName}")
-    public ResponseEntity<String> addInterest(@RequestParam String username, @PathVariable String companyName) {
-        // Assuming IPO ID is the same as companyName for simplicity
-        if(!ipoService.ipoExists(companyName)){
-            return ResponseEntity.ok("There's no IPO live with name "+companyName);
-        } 
-        if(userService.getByUsername(username)==null){
+    public ResponseEntity<String> addInterest(@PathVariable String companyName, Principal principal) {
+        String username = principal.getName();
+
+        if (!ipoService.ipoExists(companyName)) {
+            return ResponseEntity.ok("There's no IPO live with name " + companyName);
+        }
+        if (userService.getByUsername(username) == null) {
             return ResponseEntity.ok("User not registered");
         }
-        if(userService.addUserInterest(username, companyName)==null){
+        if (userService.addUserInterest(username, companyName) == null) {
             return ResponseEntity.ok("Failed");
         }
-       
-        
+
         return ResponseEntity.ok("Interest added successfully.");
-        
     }
 
     @DeleteMapping("/delete/{username}")
-    public ResponseEntity<String> deleteUser(@PathVariable String username) {
+    public ResponseEntity<String> deleteUser(@PathVariable String username, Principal principal) {
+        if (!principal.getName().equals(username)) {
+            return ResponseEntity.status(403).body("Access Denied");
+        }
+
         userService.deleteUser(username);
         return ResponseEntity.ok("User deleted successfully");
     }
 
-    @GetMapping("/interestedIPO/{username}")
-    public HashMap<String,String> getInterestedIPO(@PathVariable String username) {
+    @GetMapping("/interestedIPO")
+    public HashMap<String, String> getInterestedIPO(Principal principal) {
+        String username = principal.getName();
         return userService.getInterestedIPO(username);
     }
 
-    @PostMapping("/pair/{username}/{company}")
-    public String pairr(@RequestParam String patner,@PathVariable String username,@PathVariable String company){
-        User_data user=userService.getByUsername(patner).orElse(null);
-        User_data mainUser=userService.getByUsername(username).orElse(null);
+    @PostMapping("/pair/{company}")
+    public String pair(@RequestParam String patner, @PathVariable String company, Principal principal) {
+        String username = principal.getName();
 
-        if(user==null){
-            return "Sorry failed to get info about user";
+        User_data user = userService.getByUsername(patner).orElse(null);
+        User_data mainUser = userService.getByUsername(username).orElse(null);
+
+        if (user == null) {
+            return "Sorry, failed to get info about user";
         }
-        if(!user.getInterestedIpoIds().containsKey(company)){
-            return "The other user not intrested in the deal";
+        if (!user.getInterestedIpoIds().containsKey(company)) {
+            return "The other user is not interested in the deal";
         }
 
-        if(!mainUser.getInterestedIpoIds().get(company).equals("0")){
+        if (!mainUser.getInterestedIpoIds().get(company).equals("0")) {
             return "You are already paired for this IPO";
         }
-        if(user.getInterestedIpoIds().get(company).equals("0")){
-            mainUser.getInterestedIpoIds().put(company, "Paired to "+patner+" at your 1st prefernce");
-            mainUser.setLiveDeals(username, company+" Already paired");
+        if (user.getInterestedIpoIds().get(company).equals("0")) {
+            mainUser.getInterestedIpoIds().put(company, "Paired to " + patner + " at your 1st preference");
+            mainUser.setLiveDeals(username, company + " Already paired");
             userService.saveUser(mainUser);
 
-            user.getInterestedIpoIds().put(company, "Paired to "+ username+" at your 2nd prefernce");
-            user.setLiveDeals(patner, company+" Already paired");
+            user.getInterestedIpoIds().put(company, "Paired to " + username + " at your 2nd preference");
+            user.setLiveDeals(patner, company + " Already paired");
             userService.saveUser(user);
+        } else {
+            return "The user " + patner + " is already paired with another user";
         }
-        else{
-            return "The user "+patner+"   is already paired with other user";
-        }
-        
+
         return "Paired Successfully";
     }
 
-@GetMapping("/deals")
-public HashMap<String,String> getStatusOfDeal(){
-    User_data user=new User_data();
-    return user.getLiveDeals();
-}
+    @GetMapping("/deals")
+    public HashMap<String, String> getStatusOfDeal(Principal principal) {
+        String username = principal.getName();
+        User_data user = userService.getByUsername(username).orElse(new User_data());
+        return user.getLiveDeals();
+    }
 }

@@ -20,6 +20,6 @@ public class IpoappApplication implements CommandLineRunner {
 	}
 	@Override
 	public void run(String... args) throws Exception {
-		// This is where you can add initial data loading if needed
+		// initial data
 	}
 }
