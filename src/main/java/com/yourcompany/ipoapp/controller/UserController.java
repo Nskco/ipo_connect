@@ -24,7 +24,10 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User_data getUserById(@PathVariable String id) {
+    public  User_data getUserById(@PathVariable String id,Principal principal) {
+        if(principal.getName()!=userService.findById(id).getUsername()){
+            return null;
+        }
         return userService.findById(id);
     }
 
@@ -112,4 +115,39 @@ public class UserController {
         User_data user = userService.getByUsername(username).orElse(new User_data());
         return user.getLiveDeals();
     }
+
+
+    @PostMapping("/rating/{username}/{r}")
+    public String addRatings(Principal principal,@PathVariable("username") String username,@PathVariable("r") int r)
+    {
+        if(r>5||r<0){
+            return "Rate between 1 to 5";
+        }
+        User_data ud=userService.getByUsername(username).orElse(null);
+        if(ud!=null){
+            if(ud.getRatingProviders().add(principal.getName())){
+                int length=ud.getRatingProviders().size();
+                int rt=ud.getRatings()+r;
+                ud.setRatings(rt/length);
+                userService.saveUser(ud);
+                return "Rating added successfully! Thank you";
+            }
+            else{
+                return "You have already rated the following user";
+            }
+            
+        }
+        return "User not found";
+    }
+    @GetMapping("/rating/{username}")
+    public String showRating(@PathVariable String username) {
+        User_data ud=userService.getByUsername(username).orElse(null);
+
+        if(ud==null){
+            return "User not found";
+        }
+        else{
+        String ratings="Ratings :"+ud.getRatings();
+return ratings;    }
+}
 }

@@ -34,14 +34,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
+            .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/users/register").permitAll()
-                .requestMatchers("/users/**").authenticated() // Secure users endpoints
+                .requestMatchers("/users/**").authenticated() 
                 .anyRequest().permitAll()
             )
-            .httpBasic(); // Use basic authentication for simplicity
+            .httpBasic(); 
 
         return http.build();
     }
